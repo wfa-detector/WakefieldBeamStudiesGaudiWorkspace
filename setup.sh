@@ -6,42 +6,26 @@ fi
 #
 # Check for build directory
 MYBUILD=build
-if [ ${#} == 1 ]; then
-    MYBUILD=${1}
+if [ ! -d "${MYBUILD}" ]; then
+    echo "Install directory ${MYBUILD} does not exist - creating it..."
+    mkdir -p "${MYBUILD}" || { echo "Failed to create ${MYBUILD}"; exit 1; }
 fi
 
-if [ ! -d ${MYBUILD} ]; then
-    echo "Build directory ${MYBUILD} does not exist!"
-    return 1
+#
+# Check for install directory
+MYINSTALL=install
+if [ ! -d "${MYINSTALL}" ]; then
+    echo "Install directory ${MYINSTALL} does not exist - creating it..."
+    mkdir -p "${MYINSTALL}" || { echo "Failed to create ${MYINSTALL}"; exit 1; }
 fi
 
 # Convert to absolute path
-export MYWORKSPACE=$(realpath $(dirname ${BASH_SOURCE[0]}))
-export MYBUILD=$(realpath ${MYBUILD})
+export MYINSTALL=$(realpath ${MYINSTALL})
 
-#
-# Main software
-if [ -z "${MUCOLL_RELEASE_VERSION}" ]; then
-    #Setup Muon Collider software
-    source /opt/setup_mucoll.sh
-fi
+# Set paths
+export PATH=${MYINSTALL}/bin:$PATH
+export LD_LIBRARY_PATH=${MYINSTALL}/lib:${MYINSTALL}/lib64:$LD_LIBRARY_PATH
+export ROOT_INCLUDE_PATH=${MYINSTALL}/include:$ROOT_INCLUDE_PATH
+export PYTHONPATH=${MYINSTALL}/python:$PYTHONPATH
+export CMAKE_PREFIX_PATH=${MYINSTALL}:$CMAKE_PREFIX_PATH
 
-#
-# Add exts
-if [ -d ${MYBUILD}/exts ]; then
-    export LD_LIBRARY_PATH="$(find ${MYBUILD}/exts/* -name lib64 -type d | tr '\n' ':')$(find ${MYBUILD}/exts/* -name lib -type d | tr '\n' ':')${LD_LIBRARY_PATH}"
-    export PATH="$(find ${MYBUILD}/exts/*/bin -type d | tr '\n' ':')${PATH}"
-fi
-
-#
-# Add new modules
-for pkglib in $(find ${MYBUILD}/packages -name '*.so' -type l -o -name '*.so' -type f)
-do
-    pkgname=$(basename ${pkglib})
-    if [[ "${MARLIN_DLL}" == *"${pkgname}"* ]]; then
-        MARLIN_DLL=$(echo ${MARLIN_DLL} | sed -e 's|[^:]\+'${pkgname}'|'${pkglib}'|')
-    else
-        MARLIN_DLL=${pkglib}:${MARLIN_DLL}
-    fi
-done
-export MARLIN_DLL

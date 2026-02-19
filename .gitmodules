@@ -1,0 +1,3 @@
+[submodule "packages/MuonCVXDDigitiser"]
+	path = packages/MuonCVXDDigitiser
+	url = https://github.com/spg-berkeleylab/MuonCVXDDigitiser
