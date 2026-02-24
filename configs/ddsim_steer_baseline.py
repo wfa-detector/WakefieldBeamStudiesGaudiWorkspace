@@ -6,7 +6,7 @@ from g4units import mm, GeV, MeV, m, deg
 SIM = DD4hepSimulation()
 
 ## Path to the compact geometry desciption [XML file]
-geometryFile = "/global/cfs/projectdirs/atlas/arastogi/WFA/detector-geometries/Wakefield_v0/Wakefield_v0.xml"
+geometryFile = "/global/cfs/projectdirs/atlas/arastogi/WFA/detector-geometries/Wakefield_SiD/Wakefield_SiD.xml"
 #os.environ.get("WCD_GEO") 
 if (geometryFile == ""):
     print('ERROR: invalid / no geometry provided in $WCD_GEO environment variable. Please specify one first')
