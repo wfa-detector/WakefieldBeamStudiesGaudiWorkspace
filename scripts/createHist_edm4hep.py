@@ -9,19 +9,8 @@ import math
 # Configuration
 # -------------------------
 tree_name = "events"                     # EDM4hep default tree
-collections = ["SiVertexBarrelHits","SiVertexEndcapHits","SiTrackerBarrelHits","SiTrackerEndcapHits", "SiTrackerForwardHits"]
+collections = ["SiVertexBarrelHits","SiVertexEndcapHits","SiTrackerBarrelHits","SiTrackerEndcapHits", "SiTrackerForwardHits", "ECalBarrelCollection", "ECalEndcapCollection", "HCalBarrelCollection", "HCalEndcapCollection", "MuonBarrelHits", "MuonEndcapHits"]
 output_file = "hist_output.root"
-
-# Histogram settings
-nbins_z = 1000
-zmin = -2500
-zmax = 2500
-
-nbins_r = 800
-rmin = 0
-rmax = 1600
-# -------------------------
-
 
 def get_root_files(path):
     if os.path.isfile(path) and path.endswith(".root"):
@@ -48,14 +37,14 @@ def main():
 
     chain = ROOT.TChain(tree_name)
     for f in files:
+        print(f"Analyzing file... {f}")
         chain.Add(f)
 
     print("Total events:", chain.GetEntries())
 
     # Create R vs Z histogram
-    h_rz = ROOT.TH2F("h_rz", "SimHits;Z [mm];R [mm]",
-                     nbins_z, zmin, zmax,
-                     nbins_r, rmin, rmax)
+    h_tracker_rz = ROOT.TH2F("h_tracker_rz", "SimHits;Z [mm];R [mm]", 1000, -2500, 2500, 800, 0, 1600)
+    h_full_rz = ROOT.TH2F("h_full_rz", "SimHits;Z [mm];R [mm]", 4000, -10000, 10000, 5000, 0, 10000)
     h_vxb_edep = ROOT.TH1F("h_vxb_edep","Vertex Barrel SimHits;Energy deposited [KeV];Entries",1000,0,1000)
     h_vxe_edep = ROOT.TH1F("h_vxe_edep","Vertex Endcap SimHits;Energy deposited [KeV];Entries",1000,0,1000)
     h_tkb_edep = ROOT.TH1F("h_tkb_edep","Tracker Barrel SimHits;Energy deposited [KeV];Entries",1000,0,1000)
@@ -66,6 +55,10 @@ def main():
     # Loop over events
     for event in chain:
         for collection_name in collections:
+            
+            if not event.GetListOfBranches().FindObject(collection_name):
+                print(f"Skipping missing collection: {collection_name}")
+                continue
             hits = getattr(event, collection_name)
 
             for hit in hits:
@@ -75,22 +68,28 @@ def main():
                 
                 r = math.sqrt(x*x + y*y)
                 
-                h_rz.Fill(z, r)
+                h_full_rz.Fill(z, r)
 
-                if collection_name == "SiVertexBarrel":
+                if collection_name == "SiVertexBarrelHits":
                     h_vxb_edep.Fill(hit.eDep*1000000) #in KeV
-                if collection_name == "SiVertexEndcap":
+                    h_tracker_rz.Fill(z,r)
+                if collection_name == "SiVertexEndcapHits":
                     h_vxe_edep.Fill(hit.eDep*1000000) #in KeV
-                if collection_name == "SiTrackerBarrel":
+                    h_tracker_rz.Fill(z,r)
+                if collection_name == "SiTrackerBarrelHits":
                     h_tkb_edep.Fill(hit.eDep*1000000) #in KeV
-                if collection_name == "SiTrackerEndcap":
+                    h_tracker_rz.Fill(z,r)
+                if collection_name == "SiTrackerEndcapHits":
                     h_tke_edep.Fill(hit.eDep*1000000) #in KeV
-                if collection_name == "SiTrackerForward":
+                    h_tracker_rz.Fill(z,r)
+                if collection_name == "SiTrackerForwardHits":
                     h_tkf_edep.Fill(hit.eDep*1000000) #in KeV
+                    h_tracker_rz.Fill(z,r)
                     
     # Save output
     fout = ROOT.TFile(output_file, "RECREATE")
-    h_rz.Write()
+    h_tracker_rz.Write()
+    h_full_rz.Write()
     h_vxb_edep.Write()
     h_vxe_edep.Write()
     h_tkb_edep.Write()
