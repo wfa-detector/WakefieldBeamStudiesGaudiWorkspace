@@ -1,40 +1,44 @@
-# Template Workspace
-
-Template for developing custom key4hep packages. Fork this repository and rename to create your own project.
+# WakefieldBeamStudiesGaudiWorkspace
+A native-gaudi based Key4hep software setup to perform detector R&D studies for wakefield-based colliders
 
 ## Repository Structure
-- `exts/` External packages not included with the key4hep framework.
-- `packages/` All custom packages linked using git submodules.
-
-## Setup Instructions
+- `packages/` All custom native gaudi key4hep packages linked using git submodules.
+- 'configs/' All important configuration files are present here
 
 ### Container
-All commands are compatible and should be run inside the latest `gitlab-registry.cern.ch/muon-collider/muoncollider-docker/mucoll-sim-alma9:(NEW IMAGE)`
+All commands are compatible and should be run inside the latest the docker container setup using the image "angirar/wcd:main-gaudi-alma9". The image is public and should be available to download via the "docker pull" command.
+To start a shifter container instead, refer to the repository `https://github.com/wfa-detector/wcd-gaudi-docker`
 
-#### Apptainer
-If you have CVMFS available, then it is recommended to use the unpacked version.
-
+### Setup and build Instructions
+- Git clone this repository for e.g. `git clone git@github.com:wfa-detector/WakefieldBeamStudiesGaudiWorkspace.git`
+- cd WakefieldBeamStudiesGaudiWorkspace
+- git submodule update --init --recursive
+- Run the following commands from inside your container:
 ```bash
-apptainer shell --cleanenv /cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/muon-collider/mucoll-deploy/mucoll:(NEW IMAGE)
-```
-
-Alternatively you can download and convert the Docker image yourself.
-
-```bash
-apptainer shell --cleanenv gitlab-registry.cern.ch/muon-collider/mucoll-deploy/mucoll:(NEW IMAGE)
-```
-
-#### Shifter
-```bash
-shifter --image gitlab-registry.cern.ch/muon-collider/mucoll-deploy/mucoll:(NEW IMAGE) /bin/bash
-```
-
-### Build Instructions
-Run the following commands from inside your container. The same commands will also work with a local installation of the ILC and Key4Hep software, with the exception of the first line.
-```bash
-source /opt/setup_mucoll.sh # Setup software
 source setup.sh
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install 
 cmake --build . -t install
 ```
+
+##Generation
+e.g. 100 GeV electron gun events
+```
+python configs/pgun_edm4hep.py egun_gen.root -p 100 -e 100 --pdg 11 --theta 0 180
+```
+
+##Simulation
+Set the `geometryFile` variable in `configs/ddsim_steer_baseline.py` to point to the initial 10 TeV detector design present here - `/path/to/packages/k4geo/Wakefield/compact/Wakefield_v0/Wakefield_v0.xml`. Then run:
+```
+ddsim --steeringFile configs/ddsim_steer_baseline.py --inputFile egun_gen.root --outputFile egun_sim.root --numberOfEvents 100
+```
+
+##Digitization
+```
+k4run configs/digi_steer.py --IOSvc.Input egun_sim.root --IOSvc.Output egun_digi.root --DD4hepXMLFile /path/to/packages/k4geo/Wakefield/compact/Wakefield_v0/Wakefield_v0.xml --doTrkDigiSimple
+```
+
+##Reconstruction
+Coming up soon!!
+
+
