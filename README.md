@@ -4,6 +4,7 @@ A native-gaudi based Key4hep software setup to perform detector R&D studies for 
 ## Repository Structure
 - `packages/` All custom native gaudi key4hep packages linked using git submodules.
 - `configs/` All important configuration files are present here
+- `scripts/` Includes some helper scripts for plotting
 
 ### Container
 All commands are compatible and should be run inside the latest the docker container setup using the image "angirar/wcd:main-gaudi-alma9". The image is public and should be available to download via the "docker pull" command.
