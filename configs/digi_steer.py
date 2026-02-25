@@ -4,7 +4,7 @@
 from GaudiKernel.Constants import INFO, WARNING
 
 import sys
-sys.path.append("/global/homes/a/arastogi/wakefield/WakefieldBeamStudiesGaudiWorkspace/configs")
+sys.path.append("../configs")
 import digi_components
 
 # Collect Arguements
