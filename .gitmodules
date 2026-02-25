@@ -1,3 +1,6 @@
 [submodule "packages/MuonCVXDDigitiser"]
 	path = packages/MuonCVXDDigitiser
 	url = https://github.com/spg-berkeleylab/MuonCVXDDigitiser
+[submodule "packages/k4geo"]
+	path = packages/k4geo
+	url = git@github.com:wfa-detector/k4geo.git
