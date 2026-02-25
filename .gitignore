@@ -13,3 +13,7 @@ _deps
 build
 install
 run
+# Python temp files
+__pycache__/
+*.py[cod]
+
