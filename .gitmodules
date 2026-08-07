@@ -4,6 +4,3 @@
 [submodule "packages/k4geo"]
 	path = packages/k4geo
 	url = git@github.com:wfa-detector/k4geo.git
-[submodule "packages/k4Reco"]
-	path = packages/k4Reco
-	url = git@github.com:wfa-detector/k4Reco.git
