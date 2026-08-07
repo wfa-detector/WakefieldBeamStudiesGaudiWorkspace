@@ -16,14 +16,14 @@ parser.add_argument('output', metavar='FILE_OUT.slcio', help='Output LCIO file')
 parser.add_argument('-s', '--seed', metavar='seed', type=int, help='Seed to use for random generator', default=12345)
 parser.add_argument('-c', '--comment', metavar='TEXT',  help='Comment to be added to the run header', type=str)
 parser.add_argument('-e', '--events', metavar='N', type=int, default=1,  help='Generate N events')
-parser.add_argument('-p', '--particles', metavar='N', type=int, default=1,  help='Generate N particles/event')
+parser.add_argument('-N', '--particles', metavar='N', type=int, default=1,  help='Generate N particles/event')
 parser.add_argument('-o', '--overwrite', action='store_true',  help='Overwrite existing output file')
 parser.add_argument('--pdg', metavar='ID', type=int, default=[13], nargs='+',  help='PdgIds of the allowed particles')
 parser.add_argument('--dt', metavar='V', type=float, nargs='*', default=0,  help='Time offset [ns]')
 parser.add_argument('--dz', metavar='V', type=float, nargs='*', default=0,  help='Vertex position along Z [mm]')
 parser.add_argument('--d0', metavar='V', type=float, nargs='*', default=0,  help='Vertex position along R [mm]')
 parser.add_argument('--pt', metavar='V', type=float, nargs='*',  help='Tranverse momentum [GeV]')
-parser.add_argument('--p', metavar='V', type=float, nargs='*',  help='Total momentum [GeV]')
+parser.add_argument('-p', '--p', '--momentum', dest='p', metavar='V', type=float, nargs='+', help='Total momentum [GeV]')
 parser.add_argument('--theta', metavar='A', type=float, default=90, nargs='+',  help='Polar angle [deg]')
 
 args = parser.parse_args()
@@ -113,7 +113,8 @@ for e in range(args.events):
 		pdg = args.pdg[pdg_idx]
 		# Calculating all properties for this particle in the event
 		phi = rng.random() * math.pi * 2.
-		theta = samples['theta'][e]
+		# CLI accepts theta in degrees; Python trigonometric functions expect radians.
+		theta = math.radians(samples['theta'][e])
 		# Calculating momentum vector
 		if 'pt' in configs:
 			pt = samples['pt'][e]
@@ -156,4 +157,3 @@ for e in range(args.events):
 # Closing the output file
 #writer.finish()
 print(f'Wrote {n_particles} partiles in {n_events} events to file: {args.output}')
-
