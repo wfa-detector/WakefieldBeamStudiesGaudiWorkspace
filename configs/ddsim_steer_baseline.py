@@ -7,9 +7,9 @@ SIM = DD4hepSimulation()
 
 ## Path to the compact geometry desciption [XML file]
 geometryFile = ""
-## if (geometryFile == ""):
-##    print('ERROR: invalid / no geometry provided. Please specify one first')
-##    exit()
+if (geometryFile == ""):
+    print('ERROR: invalid / no geometry provided. Please specify one first')
+    exit()
 
 SIM.compactFile = geometryFile
 ## Lorentz boost for the crossing angle, in radian!

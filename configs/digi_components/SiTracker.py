@@ -30,7 +30,6 @@ def new_TrackerBarrel(args):
     else:
         return MuonCVXDDigitiser(
             "TrackerBarrelDigitiser",
-            OutputLevel=INFO,
             ChargeDigitizeBinning=1,
             ChargeDigitizeNumBits=4,
             ChargeMaximum=60000.,
@@ -45,17 +44,13 @@ def new_TrackerBarrel(args):
             EnergyLoss=280.0,
             MaxEnergyDelta=100.0,
             MaxTrackLength=10.0,
-            SimHitLocCollectionName=["TrackerBarrelRawHits"],
             OutputCollectionName=["TrackerBarrelHits"],
             PixelSizeX="0.050",
             PixelSizeY="10.0",
             PoissonSmearing=1,
             RelationColName=["TrackerBarrelHitsRelations"],
-            ReadoutName="SiTrackerBarrelHits",
-            RawHitsLinkColName=["TrackerBarrelRawHitRelations"],
             SegmentLength=0.005,
-            SensorThickness=0.300,
-            StoreFiredPixels=0,
+            StoreFiredPixels=1,
             SubDetectorName="SiTrackerBarrel",
             TanLorentz=0.8,
             TanLorentzY=0.0,
@@ -65,7 +60,7 @@ def new_TrackerBarrel(args):
             TimeDigitizeNumBits=10,
             TimeMaximum=15.0,
             TimeSmearingSigma=0.03,
-            LayerIDs=[1, 2, 3, 4, 5]
+            LayerIDs=["1","2","3","4","5"]
         )
      
 
@@ -99,7 +94,6 @@ def new_TrackerEndcap(args):
     else:
         return MuonCVXDDigitiser(
             "TrackerEndcapDigitiser",
-            OutputLevel=INFO,
             ChargeDigitizeBinning=1,
             ChargeDigitizeNumBits=4,
             ChargeMaximum=60000.,
@@ -114,17 +108,13 @@ def new_TrackerEndcap(args):
             EnergyLoss=280.0,
             MaxEnergyDelta=100.0,
             MaxTrackLength=10.0,
-            SimHitLocCollectionName=["TrackerEndcapRawHits"],
             OutputCollectionName=["TrackerEndcapHits"],
             PixelSizeX="0.050",
             PixelSizeY="10.0",
             PoissonSmearing=1,
             RelationColName=["TrackerEndcapHitsRelations"],
-            ReadoutName="SiTrackerEndcapHits",
-            RawHitsLinkColName=["TrackerEndcapRawHitRelations"],
             SegmentLength=0.005,
-            SensorThickness=0.300,
-            StoreFiredPixels=0,
+            StoreFiredPixels=1,
             SubDetectorName="SiTrackerEndcap",
             TanLorentz=0.8,
             TanLorentzY=0.0,
@@ -134,7 +124,7 @@ def new_TrackerEndcap(args):
             TimeDigitizeNumBits=10,
             TimeMaximum=15.0,
             TimeSmearingSigma=0.03,
-            LayerIDs=[1, 2, 3, 4]
+            LayerIDs=["1","2","3","4"]
         )
 
 
@@ -168,7 +158,6 @@ def new_TrackerForward(args):
     else:
         return MuonCVXDDigitiser(
             "TrackerForwardDigitiser",
-            OutputLevel=INFO,
             ChargeDigitizeBinning=1,
             ChargeDigitizeNumBits=4,
 	    ChargeMaximum=60000.,
@@ -183,17 +172,13 @@ def new_TrackerForward(args):
             EnergyLoss=280.0,
             MaxEnergyDelta=100.0,
             MaxTrackLength=10.0,
-            SimHitLocCollectionName=["TrackerForwardRawHits"],
             OutputCollectionName=["TrackerForwardHits"],
             PixelSizeX="0.020",
             PixelSizeY="0.020",
             PoissonSmearing=1,
             RelationColName=["TrackerForwardHitsRelations"],
-            ReadoutName="SiTrackerForwardHits",
-            RawHitsLinkColName=["TrackerForwardRawHitRelations"],
             SegmentLength=0.005,
-            SensorThickness=0.020,
-            StoreFiredPixels=0,
+            StoreFiredPixels=1,
             SubDetectorName="SiTrackerForward",
             TanLorentz=0.8,
             TanLorentzY=0.0,
@@ -203,5 +188,5 @@ def new_TrackerForward(args):
             TimeDigitizeNumBits=10,
             TimeMaximum=15.0,
             TimeSmearingSigma=0.03,
-            LayerIDs=[1, 2, 3]
+            LayerIDs=["1","2","3"]
         )
