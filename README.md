@@ -25,7 +25,7 @@ cmake --build . -t install
 ## Generation
 e.g. 100 GeV electron gun events
 ```
-python configs/pgun_edm4hep.py egun_gen.root -e 100 --pdg 11 -p 100 --theta 0 180
+python configs/pgun_edm4hep.py egun_gen.root -p 100 -e 100 --pdg 11 --theta 0 180
 ```
 
 ## Simulation
@@ -41,4 +41,5 @@ k4run configs/digi_steer.py --IOSvc.Input egun_sim.root --IOSvc.Output egun_digi
 
 ## Reconstruction
 Coming up soon!!
+
 
