@@ -30,6 +30,7 @@ def new_VertexBarrel(args):
     else:
         return MuonCVXDDigitiser(
             "VXDBarrelDigitiser",
+            OutputLevel=INFO,
             ChargeDigitizeBinning=1,
             ChargeDigitizeNumBits=4,
             ChargeMaximum=15000.,
@@ -44,13 +45,17 @@ def new_VertexBarrel(args):
             EnergyLoss=280.0,
             MaxEnergyDelta=100.0,
             MaxTrackLength=10.0,
+            SimHitLocCollectionName=["VertexBarrelRawHits"],
             OutputCollectionName=["VertexBarrelHits"],
             PixelSizeX="0.020",
             PixelSizeY="0.020",
             PoissonSmearing=1,
             RelationColName=["VertexBarrelHitsRelations"],
+            ReadoutName="SiVertexBarrelHits",
+            RawHitsLinkColName=["VertexBarrelRawHitRelations"],
             SegmentLength=0.005,
-            StoreFiredPixels=1,
+            SensorThickness=0.020,
+            StoreFiredPixels=0,
             SubDetectorName="SiVertexBarrel",
             TanLorentz=0.8,
             TanLorentzY=0.0,
@@ -60,7 +65,7 @@ def new_VertexBarrel(args):
             TimeDigitizeNumBits=10,
             TimeMaximum=15.0,
             TimeSmearingSigma=0.03,
-            LayerIDs=["1","2","3","4","5"]
+            LayerIDs=[1, 2, 3, 4, 5]
         )
 
 def new_VertexEndcap(args):
@@ -93,6 +98,7 @@ def new_VertexEndcap(args):
     else:
         return MuonCVXDDigitiser(
             "VXDEndcapDigitiser",
+            OutputLevel=INFO,
             ChargeDigitizeBinning=1,
             ChargeDigitizeNumBits=4,
             ChargeMaximum=15000.,
@@ -107,13 +113,17 @@ def new_VertexEndcap(args):
             EnergyLoss=280.0,
             MaxEnergyDelta=100.0,
             MaxTrackLength=10.0,
+            SimHitLocCollectionName=["VertexEndcapRawHits"],
             OutputCollectionName=["VertexEndcapHits"],
             PixelSizeX="0.020",
             PixelSizeY="0.020",
             PoissonSmearing=1,
             RelationColName=["VertexEndcapHitsRelations"],
+            ReadoutName="SiVertexEndcapHits",
+            RawHitsLinkColName=["VertexEndcapRawHitRelations"],
             SegmentLength=0.005,
-            StoreFiredPixels=1,
+            SensorThickness=0.020,
+            StoreFiredPixels=0,
             SubDetectorName="SiVertexEndcap",
             TanLorentz=0.0,
             TanLorentzY=0.0,
@@ -123,6 +133,5 @@ def new_VertexEndcap(args):
             TimeDigitizeNumBits=10,
             TimeMaximum=15.0,
             TimeSmearingSigma=0.03,
-            LayerIDs=["1","2","3","4"]
+            LayerIDs=[1, 2, 3, 4]
         )
-
