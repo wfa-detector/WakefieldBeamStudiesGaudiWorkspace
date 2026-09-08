@@ -168,7 +168,7 @@ def main():
                 particle = col.create()
                 
             particle.setPDG(pid)
-            particle.setGeneratorStatus(int(w[i]))
+            particle.setGeneratorStatus(1)
             particle.setTime(t[i])
             particle.setMass(m[i])
             particle.setCharge(q[i])
