@@ -25,9 +25,9 @@ def main():
         raise FileNotFoundError(f"Directory does not exist: {args.i}. Please check the input again.")
 
 
-    ele_px, ele_py, ele_pz, ele_energy, ele_vx, ele_vy, ele_vz, ele_phi, ele_eta, ele_pt = array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d')
-    pos_px, pos_py, pos_pz, pos_energy, pos_vx, pos_vy, pos_vz, pos_phi, pos_eta, pos_pt = array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d')
-    pho_px, pho_py, pho_pz, pho_energy, pho_vx, pho_vy, pho_vz, pho_phi, pho_eta, pho_pt = array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d')
+    ele_px, ele_py, ele_pz, ele_energy, ele_vx, ele_vy, ele_vz, ele_phi, ele_eta, ele_pt, ele_theta, ele_r = array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d')
+    pos_px, pos_py, pos_pz, pos_energy, pos_vx, pos_vy, pos_vz, pos_phi, pos_eta, pos_pt, pos_theta, pos_r = array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d')
+    pho_px, pho_py, pho_pz, pho_energy, pho_vx, pho_vy, pho_vz, pho_phi, pho_eta, pho_pt, pho_theta, pho_r  = array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d'), array('d')
 
     reader = pyLCIO.IOIMPL.LCFactory.getInstance().createLCReader()
 
@@ -51,6 +51,8 @@ def main():
                 vertex = mcparticle.getVertex()
                 lvec = ROOT.TLorentzVector()
                 lvec.SetPxPyPzE(momentum[X], momentum[Y], momentum[Z], mcparticle.getEnergy())
+                lpos = ROOT.TLorentzVector()
+                lpos.SetXYZT(vertex[X]*100,vertex[Y]*100,vertex[Z]*100,mcparticle.getTime()) #position in cm
                 
                 if mcparticle.getPDG()==11:
                     ele_px.append(momentum[X])
@@ -63,6 +65,8 @@ def main():
                     ele_phi.append(lvec.Phi())
                     ele_eta.append(lvec.Eta())
                     ele_pt.append(lvec.Pt())
+                    ele_theta.append(lvec.Theta())
+                    ele_r.append(lpos.Rho())
                     
                 if mcparticle.getPDG()==-11:
                     pos_px.append(momentum[X])
@@ -75,6 +79,8 @@ def main():
                     pos_phi.append(lvec.Phi())
                     pos_eta.append(lvec.Eta())
                     pos_pt.append(lvec.Pt())
+                    pos_theta.append(lvec.Theta())
+                    pos_r.append(lpos.Rho())
 
                 if mcparticle.getPDG()==22:
                     pho_px.append(momentum[X])
@@ -87,45 +93,56 @@ def main():
                     pho_phi.append(lvec.Phi())
                     pho_eta.append(lvec.Eta())
                     pho_pt.append(lvec.Pt())
+                    pho_theta.append(lvec.Theta())
+                    pho_r.append(lpos.Rho())
 
 
     print("All collections read, creating and filling the histograms now.")
     
     root_file = ROOT.TFile(f"{args.o}", "RECREATE")
-    h_ele_px = ROOT.TH1F("h_ele_px", "Px of electrons; Px [GeV/c]; Entries", 1000, -50, 50)
-    h_ele_py = ROOT.TH1F("h_ele_py", "Py of electrons; Py [GeV/c]; Entries", 1000, -50, 50)
-    h_ele_pz = ROOT.TH1F("h_ele_pz", "Pz of electrons; Pz [GeV/c]; Entries", 20000, -10000, 10000)
-    h_ele_energy = ROOT.TH1F("h_ele_energy", "Energy of electrons; Energy [GeV/c^2]; Entries", 1000, 0, 10000)
-    h_ele_vx = ROOT.TH1F("h_ele_vx", "Vx of electrons; Vx [um]; Entries", 2000, -100, 100)
-    h_ele_vy = ROOT.TH1F("h_ele_vy", "Vy of electrons; Vy [um]; Entries", 2000, -100, 100)
-    h_ele_vz = ROOT.TH1F("h_ele_vz", "Vz of electrons; Vz [um]; Entries", 20000, -1000, 1000)
-    h_ele_phi = ROOT.TH1F("h_ele_phi", "Phi of electrons; Phi [radian]; Entries", 6400, -3.2, 3.2)
-    h_ele_eta = ROOT.TH1F("h_ele_eta", "Eta of electrons; Eta; Entries", 2000, -10, 10)
-    h_ele_pt = ROOT.TH1F("h_ele_pt", "Pt of electrons; Pt [GeV/c]; Entries", 1000, 0, 50)
+    h_ele_px = ROOT.TH1D("h_ele_px", "Px of electrons; Px [GeV/c]; Entries", 1000, -50, 50)
+    h_ele_py = ROOT.TH1D("h_ele_py", "Py of electrons; Py [GeV/c]; Entries", 1000, -50, 50)
+    h_ele_pz = ROOT.TH1D("h_ele_pz", "Pz of electrons; Pz [GeV/c]; Entries", 20000, -1000, 1000)
+    h_ele_energy = ROOT.TH1D("h_ele_energy", "Energy of electrons; Energy [GeV/c^2]; Entries", 10000, 0, 1000)
+    h_ele_vx = ROOT.TH1D("h_ele_vx", "Vx of electrons; Vx [um]; Entries", 2000, -100, 100)
+    h_ele_vy = ROOT.TH1D("h_ele_vy", "Vy of electrons; Vy [um]; Entries", 2000, -100, 100)
+    h_ele_vz = ROOT.TH1D("h_ele_vz", "Vz of electrons; Vz [um]; Entries", 20000, -1000, 1000)
+    h_ele_phi = ROOT.TH1D("h_ele_phi", "Phi of electrons; Phi [radian]; Entries", 6400, -3.2, 3.2)
+    h_ele_eta = ROOT.TH1D("h_ele_eta", "Eta of electrons; Eta; Entries", 2000, -10, 10)
+    h_ele_pt = ROOT.TH1D("h_ele_pt", "Pt of electrons; Pt [GeV/c]; Entries", 1000, 0, 100)
+    h_ele_theta = ROOT.TH1D("h_ele_theta", "Theta of electrons; Theta [radians]; Entries", 1000, -5, 5)
+    h_ele_pt_thetaLow = ROOT.TH1D("h_ele_pt_thetaLow", "Pt of electrons; Pt [GeV/c]; Entries", 1000, 0, 100)
+    h_ele_pt_thetaHi = ROOT.TH1D("h_ele_pt_thetaHi", "Pt of electrons; Pt [GeV/c]; Entries", 1000, 0, 100)
 
-    h_pos_px = ROOT.TH1F("h_pos_px", "Px of positrons; Px [GeV/c]; Entries", 1000, -50, 50)
-    h_pos_py = ROOT.TH1F("h_pos_py", "Py of positrons; Py [GeV/c]; Entries", 1000, -50, 50)
-    h_pos_pz = ROOT.TH1F("h_pos_pz", "Pz of positrons; Pz [GeV/c]; Entries", 20000, -10000, 10000)
-    h_pos_energy = ROOT.TH1F("h_pos_energy", "Energy of positrons; Energy [GeV/c^2]; Entries", 1000, 0, 10000)
-    h_pos_vx = ROOT.TH1F("h_pos_vx", "Vx of positrons; Vx [um]; Entries", 2000, -100, 100)
-    h_pos_vy = ROOT.TH1F("h_pos_vy", "Vy of positrons; Vy [um]; Entries", 2000, -100, 100)
-    h_pos_vz = ROOT.TH1F("h_pos_vz", "Vz of positrons; Vz [um]; Entries", 20000, -1000, 1000)
-    h_pos_phi = ROOT.TH1F("h_pos_phi", "Phi of positrons; Phi [radian]; Entries", 6400, -3.2, 3.2)
-    h_pos_eta = ROOT.TH1F("h_pos_eta", "Eta of positrons; Eta; Entries", 2000, -10, 10)
-    h_pos_pt = ROOT.TH1F("h_pos_pt", "Pt of positrons; Pt [GeV/c]; Entries", 1000, 0, 50)
+    h_pos_px = ROOT.TH1D("h_pos_px", "Px of positrons; Px [GeV/c]; Entries", 1000, -50, 50)
+    h_pos_py = ROOT.TH1D("h_pos_py", "Py of positrons; Py [GeV/c]; Entries", 1000, -50, 50)
+    h_pos_pz = ROOT.TH1D("h_pos_pz", "Pz of positrons; Pz [GeV/c]; Entries", 20000, -1000, 1000)
+    h_pos_energy = ROOT.TH1D("h_pos_energy", "Energy of positrons; Energy [GeV/c^2]; Entries", 10000, 0, 1000)
+    h_pos_vx = ROOT.TH1D("h_pos_vx", "Vx of positrons; Vx [um]; Entries", 2000, -100, 100)
+    h_pos_vy = ROOT.TH1D("h_pos_vy", "Vy of positrons; Vy [um]; Entries", 2000, -100, 100)
+    h_pos_vz = ROOT.TH1D("h_pos_vz", "Vz of positrons; Vz [um]; Entries", 20000, -1000, 1000)
+    h_pos_phi = ROOT.TH1D("h_pos_phi", "Phi of positrons; Phi [radian]; Entries", 6400, -3.2, 3.2)
+    h_pos_eta = ROOT.TH1D("h_pos_eta", "Eta of positrons; Eta; Entries", 2000, -10, 10)
+    h_pos_pt = ROOT.TH1D("h_pos_pt", "Pt of positrons; Pt [GeV/c]; Entries", 1000, 0, 100)
+    h_pos_theta = ROOT.TH1D("h_pos_theta", "Theta of positrons; Theta [radians]; Entries", 1000, -5, 5)
+    h_pos_pt_thetaLow = ROOT.TH1D("h_pos_pt_thetaLow", "Pt of positrons; Pt [GeV/c]; Entries", 1000, 0, 100)
+    h_pos_pt_thetaHi = ROOT.TH1D("h_pos_pt_thetaHi", "Pt of positrons; Pt [GeV/c]; Entries", 1000, 0, 100)
 
-    h_pho_px = ROOT.TH1F("h_pho_px", "Px of photons; Px [GeV/c]; Entries", 10000, -50, 50)
-    h_pho_py = ROOT.TH1F("h_pho_py", "Py of photons; Py [GeV/c]; Entries", 10000, -50, 50)
-    h_pho_pz = ROOT.TH1F("h_pho_pz", "Pz of photons; Pz [GeV/c]; Entries", 20000, -10000, 10000)
-    h_pho_energy = ROOT.TH1F("h_pho_energy", "Energy of photons; Energy [GeV/c^2]; Entries", 1000, 0, 10000)
-    h_pho_vx = ROOT.TH1F("h_pho_vx", "Vx of photons; Vx [um]; Entries", 2000, -100, 100)
-    h_pho_vy = ROOT.TH1F("h_pho_vy", "Vy of photons; Vy [um]; Entries", 2000, -100, 100)
-    h_pho_vz = ROOT.TH1F("h_pho_vz", "Vz of photons; Vz [um]; Entries", 10000, -1000, 1000)
-    h_pho_phi = ROOT.TH1F("h_pho_phi", "Phi of photons; Phi [radian]; Entries", 6400, -3.2, 3.2)
-    h_pho_eta = ROOT.TH1F("h_pho_eta", "Eta of photons; Eta; Entries", 2000, -10, 10)
-    h_pho_pt = ROOT.TH1F("h_pho_pt", "Pt of photons; Pt [GeV/c]; Entries", 1000, 0, 50)
+    h_pho_px = ROOT.TH1D("h_pho_px", "Px of photons; Px [GeV/c]; Entries", 10000, -50, 50)
+    h_pho_py = ROOT.TH1D("h_pho_py", "Py of photons; Py [GeV/c]; Entries", 10000, -50, 50)
+    h_pho_pz = ROOT.TH1D("h_pho_pz", "Pz of photons; Pz [GeV/c]; Entries", 20000, -1000, 1000)
+    h_pho_energy = ROOT.TH1D("h_pho_energy", "Energy of photons; Energy [GeV/c^2]; Entries", 10000, 0, 1000)
+    h_pho_vx = ROOT.TH1D("h_pho_vx", "Vx of photons; Vx [um]; Entries", 2000, -100, 100)
+    h_pho_vy = ROOT.TH1D("h_pho_vy", "Vy of photons; Vy [um]; Entries", 2000, -100, 100)
+    h_pho_vz = ROOT.TH1D("h_pho_vz", "Vz of photons; Vz [um]; Entries", 10000, -1000, 1000)
+    h_pho_phi = ROOT.TH1D("h_pho_phi", "Phi of photons; Phi [radian]; Entries", 6400, -3.2, 3.2)
+    h_pho_eta = ROOT.TH1D("h_pho_eta", "Eta of photons; Eta; Entries", 2000, -10, 10)
+    h_pho_pt = ROOT.TH1D("h_pho_pt", "Pt of photons; Pt [GeV/c]; Entries", 1000, 0, 100)
+    h_pho_theta = ROOT.TH1D("h_pho_theta", "Theta of photons; Theta [radians]; Entries", 1000, -5, 5)
+    h_pho_pt_thetaLow = ROOT.TH1D("h_pho_pt_thetaLow", "Pt of photons; Pt [GeV/c]; Entries", 1000, 0, 100)
+    h_pho_pt_thetaHi = ROOT.TH1D("h_pho_pt_thetaHi", "Pt of photons; Pt [GeV/c]; Entries", 1000, 0, 100)
 
-    w = 2400
+    w = 1
     
     for i in range(len(ele_px)):
         h_ele_px.Fill(ele_px[i], w)
@@ -138,7 +155,12 @@ def main():
         h_ele_pt.Fill(ele_pt[i], w)
         h_ele_eta.Fill(ele_eta[i], w)
         h_ele_phi.Fill(ele_phi[i], w)
-
+        h_ele_theta.Fill(ele_theta[i],w)
+        if ele_theta[i]<1 or ele_theta[i]>2:
+            h_ele_pt_thetaLow.Fill(ele_pt[i], w)
+        else:
+            h_ele_pt_thetaHi.Fill(ele_pt[i], w)
+            
     for i in range(len(pos_px)):
         h_pos_px.Fill(pos_px[i], w)
         h_pos_py.Fill(pos_py[i], w)
@@ -150,6 +172,11 @@ def main():
         h_pos_pt.Fill(pos_pt[i], w)
         h_pos_eta.Fill(pos_eta[i], w)
         h_pos_phi.Fill(pos_phi[i], w)
+        h_pos_theta.Fill(pos_theta[i],w)
+        if pos_theta[i]<1 or pos_theta[i]>2:
+            h_pos_pt_thetaLow.Fill(pos_pt[i], w)
+        else:
+            h_pos_pt_thetaHi.Fill(pos_pt[i], w)
 
     for i in range(len(pho_px)):
         h_pho_px.Fill(pho_px[i], w)
@@ -162,6 +189,11 @@ def main():
         h_pho_pt.Fill(pho_pt[i], w)
         h_pho_eta.Fill(pho_eta[i], w)
         h_pho_phi.Fill(pho_phi[i], w)
+        h_pho_theta.Fill(pho_theta[i],w)
+        if pho_theta[i]<1 or pho_theta[i]>2:
+            h_pho_pt_thetaLow.Fill(pho_pt[i], w)
+        else:
+            h_pho_pt_thetaHi.Fill(pho_pt[i], w)
 
     root_file.Write()
 
