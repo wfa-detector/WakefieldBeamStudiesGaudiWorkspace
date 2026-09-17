@@ -49,6 +49,7 @@ def new_VertexBarrel(args):
             PixelSizeY="0.020",
             PoissonSmearing=1,
             RelationColName=["VertexBarrelHitsRelations"],
+            ReadoutName="SiVertexBarrelHits",
             SegmentLength=0.005,
             StoreFiredPixels=1,
             SubDetectorName="SiVertexBarrel",
@@ -112,6 +113,7 @@ def new_VertexEndcap(args):
             PixelSizeY="0.020",
             PoissonSmearing=1,
             RelationColName=["VertexEndcapHitsRelations"],
+            ReadoutName="SiVertexEndcapHits",
             SegmentLength=0.005,
             StoreFiredPixels=1,
             SubDetectorName="SiVertexEndcap",
@@ -125,4 +127,3 @@ def new_VertexEndcap(args):
             TimeSmearingSigma=0.03,
             LayerIDs=["1","2","3","4"]
         )
-
