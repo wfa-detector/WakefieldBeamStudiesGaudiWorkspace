@@ -44,12 +44,14 @@ def new_VertexBarrel(args):
             EnergyLoss=280.0,
             MaxEnergyDelta=100.0,
             MaxTrackLength=10.0,
+            SimHitLocCollectionName=["VertexBarrelRawHits"],
             OutputCollectionName=["VertexBarrelHits"],
             PixelSizeX="0.020",
             PixelSizeY="0.020",
             PoissonSmearing=1,
             RelationColName=["VertexBarrelHitsRelations"],
             ReadoutName="SiVertexBarrelHits",
+            RawHitsLinkColName=["VertexBarrelRawHitRelations"],
             SegmentLength=0.005,
             StoreFiredPixels=1,
             SubDetectorName="SiVertexBarrel",
@@ -61,7 +63,7 @@ def new_VertexBarrel(args):
             TimeDigitizeNumBits=10,
             TimeMaximum=15.0,
             TimeSmearingSigma=0.03,
-            LayerIDs=["1","2","3","4","5"]
+            LayerIDs=[1,2,3,4,5]
         )
 
 def new_VertexEndcap(args):
@@ -108,12 +110,14 @@ def new_VertexEndcap(args):
             EnergyLoss=280.0,
             MaxEnergyDelta=100.0,
             MaxTrackLength=10.0,
+            SimHitLocCollectionName=["VertexEndcapRawHits"],
             OutputCollectionName=["VertexEndcapHits"],
             PixelSizeX="0.020",
             PixelSizeY="0.020",
             PoissonSmearing=1,
             RelationColName=["VertexEndcapHitsRelations"],
             ReadoutName="SiVertexEndcapHits",
+            RawHitsLinkColName=["VertexEndcapRawHitRelations"],
             SegmentLength=0.005,
             StoreFiredPixels=1,
             SubDetectorName="SiVertexEndcap",
@@ -125,5 +129,5 @@ def new_VertexEndcap(args):
             TimeDigitizeNumBits=10,
             TimeMaximum=15.0,
             TimeSmearingSigma=0.03,
-            LayerIDs=["1","2","3","4"]
+            LayerIDs=[1,2,3,4]
         )
