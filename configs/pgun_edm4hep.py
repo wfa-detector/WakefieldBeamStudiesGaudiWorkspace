@@ -113,7 +113,8 @@ for e in range(args.events):
 		pdg = args.pdg[pdg_idx]
 		# Calculating all properties for this particle in the event
 		phi = rng.random() * math.pi * 2.
-		theta = samples['theta'][e]
+		# The command-line interface specifies theta in degrees.
+		theta = math.radians(samples['theta'][e])
 		# Calculating momentum vector
 		if 'pt' in configs:
 			pt = samples['pt'][e]
